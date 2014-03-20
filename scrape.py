@@ -14,6 +14,9 @@ def parse_result(text):
     for i in soup.find_all('div', 'bloq_news'):
         obj = {}
         url = False
+        title = False
+        brief = False
+        date = False
         tags = []
         for child in i.descendants:
             if child.name == 'a' and child.has_attr('target') and url == False:
