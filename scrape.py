@@ -8,9 +8,11 @@ import sys
 
 def parse_result(text):
     from bs4 import BeautifulSoup
+    import json
     soup = BeautifulSoup(text)
 
     for i in soup.find_all('div', 'bloq_news'):
+        obj = {}
         url = False
         tags = []
         for child in i.descendants:
@@ -26,15 +28,20 @@ def parse_result(text):
                 date = child.string
             if child.name == 'h2':
                 title = child.contents[1].string
-        print url
-        print title.encode("utf8")
-        print brief.encode("utf8")
-        print tags
-        print date
-        print "=============="
+        obj['url'] = url
+        obj['title'] = title.encode("utf8")
+        obj['brief'] = brief.encode("utf8")
+        obj['tags'] = tags
+        obj['date'] = date
+        f = codecs.open("output.txt", "a", "utf8")
+        f.write(json.dumps(obj) + "\n")
+        f.close()
 
 def scrape(url_web):
     import requests
+
+    f = codecs.open("output.txt", "w", "utf8")
+    f.close()
 
     url = url_web
     for i in range(0,60000,15):
@@ -45,8 +52,6 @@ def scrape(url_web):
             r = requests.get(url, params=payload)
         print r.url
         data = parse_result(r.text)
-        sys.exit()
-
 
 
 def main():
