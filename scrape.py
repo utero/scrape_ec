@@ -6,13 +6,36 @@ from argparse import RawTextHelpFormatter
 import codecs
 import sys
 
+def parse_result(text):
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(text)
+
+    for i in soup.find_all('div', 'bloq_news'):
+        url = False
+        for child in i.descendants:
+            if child.name == 'a' and child.has_attr('target') and url == False:
+                url = child['href']
+                title = child.string
+            if child.name == 'p':
+                brief = child.string
+        print url
+        print title
+        print brief
+        print "=============="
 
 def scrape(url_web):
     import requests
 
     url = url_web
     for i in range(0,60000,15):
-        print i
+        if i == 0:
+            r = requests.get(url)
+        else:
+            payload = {'start': i}
+            r = requests.get(url, params=payload)
+        print r.url
+        data = parse_result(r.text)
+        sys.exit()
 
 
 
