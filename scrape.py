@@ -12,15 +12,25 @@ def parse_result(text):
 
     for i in soup.find_all('div', 'bloq_news'):
         url = False
+        tags = []
         for child in i.descendants:
             if child.name == 'a' and child.has_attr('target') and url == False:
                 url = child['href']
-                title = child.string
             if child.name == 'p':
-                brief = child.string
+                brief = child.string.strip()
+            if child.name == 'h3':
+                for tag in child.contents:
+                    if not tag.string.startswith("http"):
+                        tags.append(tag.string.encode("utf8"))
+            if child.name == 'div' and 'fecha' in child['class']:
+                date = child.string
+            if child.name == 'h2':
+                title = child.contents[1].string
         print url
-        print title
-        print brief
+        print title.encode("utf8")
+        print brief.encode("utf8")
+        print tags
+        print date
         print "=============="
 
 def scrape(url_web):
