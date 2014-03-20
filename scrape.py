@@ -28,11 +28,27 @@ def parse_result(text):
                 date = child.string
             if child.name == 'h2':
                 title = child.contents[1].string
-        obj['url'] = url
-        obj['title'] = title.encode("utf8")
-        obj['brief'] = brief.encode("utf8")
-        obj['tags'] = tags
-        obj['date'] = date
+        try:
+            obj['url'] = url
+        except:
+            pass
+        try:
+            obj['title'] = title.encode("utf8")
+        except:
+            pass
+        try:
+            obj['brief'] = brief.encode("utf8")
+        except:
+            pass
+        try:
+            obj['tags'] = tags
+        except:
+            pass
+        try:
+            obj['date'] = date
+        except:
+            pass
+
         f = codecs.open("output.txt", "a", "utf8")
         f.write(json.dumps(obj) + "\n")
         f.close()
