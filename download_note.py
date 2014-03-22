@@ -22,6 +22,7 @@ def parse_result(text):
         return text
 
 def download_note(filename):
+    f = codecs.open("output2.txt", "a", "utf8")
     with codecs.open(filename, "r", "utf8") as data:
         lines = data.readlines()
         for line in lines:
@@ -31,7 +32,8 @@ def download_note(filename):
                 r = requests.get(url)
                 data = parse_result(r.text)
                 line['text'] = data
-                print line
+                f.write(json.dumps(line) + "\n")
+    f.close()
 
 
 def main():
